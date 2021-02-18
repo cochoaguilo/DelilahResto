@@ -1,4 +1,5 @@
 const sequelize = require('../conexion')
+let jwt = require('jsonwebtoken');
 
 let getUsuarios =  async (req, res) => {
     const query = 'SELECT * FROM usuarios';
@@ -11,12 +12,12 @@ let getUsuarios =  async (req, res) => {
   };
 
 let newUsuario = async(req, res) => {
-    const query = 'INSERT INTO usuarios (usuario, Nombres, correo, telefono, direccion, contraseña, admin) VALUES (?,?,?,?,?,?,?)';
+    const query = 'INSERT INTO usuarios (usuario, Nombres, correo, telefono, direccion, contrasena, id_role) VALUES (?,?,?,?,?,?,?)';
     try {
-      const {usuario, nombres, correo, telefono, direccion, contraseña, admin} = req.body;
+      const {usuario, nombres, correo, telefono, direccion, contrasena, id_role} = req.body;
       await sequelize.query(query, {
         replacements: [
-          usuario, nombres, correo, telefono, direccion, contraseña, admin
+          usuario, nombres, correo, telefono, direccion, contrasena, id_role
         ]
       }).then((response)=>{
         res.send({mensaje: 'enviado', usuario: req.body});
@@ -48,7 +49,7 @@ let deleteUsuario = async (req,res)=>{
     });
   });*/
   
-let favoritos = async (req, res) => {
+/*let favoritos = async (req, res) => {
     idUsuario = req.params.id;
     idProducto = req.params.inventoryItem;
     
@@ -62,32 +63,35 @@ let favoritos = async (req, res) => {
         });
       }
     }
-  };
-
+  };*/
+  
 let loginUsuario = async(req, res) => {
-    const query = 'SELECT nombre and pass FROM usuarios';
-    let { nombre, pass } = req.body;
+    let clave = "marcos21";
+    let { correo, contrasena } = req.body;
+    console.log('estoy aqui')
     try{
-    usuarios.find((usuario) => {
-      if (nombre == usuario.nombre && pass == usuario.pass && email) {
-        let obj = {
-          id: usuario.id,
-          nombre: usuario.nombre,
-        };
-  
-        let token = jwt.sign(obj, clave);
-  
-        res.send(token);
+      const query = `SELECT * FROM usuarios
+    where correo =? and 
+    contrasena = ? LIMIT 1`;
+      let result = await sequelize.query(query,{replacements:[correo, contrasena]
+      })
+      console.log(result);
+      console.log(result.length);
+      if (result !== 0) {
+        
+        let token = jwt.sign({correo: result.correo, tipo: result.id_role}, clave);
+        
+        res.status(200).json({msj: 'usuario loggeado', token: token})
       } 
-    })
-  }
-    catch {
+    }
+    catch (e){
+      console.log(e);
       res.status(401).send("usuario incorrecto");
-    };
+    }
   };
 
   exports.getUsuarios = getUsuarios;
   exports.newUsuario = newUsuario;
   exports.deleteUsuario = deleteUsuario;
   exports.loginUsuario = loginUsuario;
-  exports.favoritos = favoritos;
+  //exports.favoritos = favoritos;

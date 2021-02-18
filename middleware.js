@@ -1,24 +1,33 @@
-const autentificarAdmin = (req, res, next) => {
+const jwt = require('jsonwebtoken');
+
+
+
+
+
+const autentificarAdmin = (req,res,next) =>{
+    const query = `select nombre_rol,usuario from usuarios inner join usuarios on usuarios_roles.id_role = usuarios.id_usuario and usuario.email = '?'`;
+    if(query !== 1){
+    console.log('no')
+    res.status(401).send("No esta autorizado")
+    }
+    next();
+}
+const autentificarUser = (req, res, next) => {
     //codigo que identifica si el que ingresa tiene permitido el ingreso
-    const nombre = req.query.nombre
-    const query = 'SELECT admin FROM usuarios WHERE nombre=?';
+    const jwtToken = req.headers["authorization"];
+    if (!jwtToken) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    const jwtClient = jwtToken.split(" ")[1];
+    jwt.verify(jwtClient, config.JwtSecretKey, (error, decoded) => {
+        if (error) {
+            return res.status(401).json({ message: "Token Expired" });
+        }
+        next();
+    });
     
     
   };
 
-  /*const emailValid = (req, res, next) => {
-  var correo = req.body.email;
-  arroba = correo.indexOf("@");
-  punto = correo.lastIndexOf(".");
-  extension = correo.split(".")[1];
-
-  if (arroba < 1 || punto - arroba < 2 || correo === "") {
-    res.send("correo invalido");
-  } else if (extension.length > 3) {
-    res.send("correo invalido");
-  } else {
-    res.send("correo valido");
-  }
-
-  next();
-};*/
+  exports.autentificarUser = autentificarUser;
+  

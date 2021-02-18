@@ -11,6 +11,20 @@ let getProductos =  async(req, res) => {
       console.log(e);
     }
   };
+
+const getProductoById = async (req, res) =>{
+    try {
+        const result = await sequelize.query(`SELECT * FROM productos 
+        WHERE id_producto = ${req.params.id}`, 
+        {type: sequelize.QueryTypes.SELECT})
+
+        console.log(result)
+        res.status(200).json({result})
+    } catch (error) {
+        console.log(`error en la inserción ${error}`)
+    }
+    
+}
   
 let nuevoProducto = async(req, res) => {
     const query = 'INSERT INTO productos (name, precio) VALUES (?,?)';
@@ -29,14 +43,13 @@ let nuevoProducto = async(req, res) => {
   };
   
 let deleteProducto =  async(req, res)=>{
-    const query = 'DELETE FROM productos WHERE id_producto=?';
-    const id = req.params.id;
+    const query = `DELETE FROM productos WHERE id_producto= ${req.params.id}`;
     try{
-      await sequelize.query(query, {
-        replacements: [id]
-      }).then(data =>{
-        res.send({status: 'eliminado'});
-      });
+      let result = await sequelize.query(query);
+      res.status(204).json({
+        mensaje: 'producto eliminado',
+        result
+      })
     }catch(e){
       console.log(e);
     }
@@ -46,3 +59,4 @@ let deleteProducto =  async(req, res)=>{
 exports.getProductos = getProductos;
 exports.nuevoProducto = nuevoProducto;
 exports.deleteProducto = deleteProducto;
+exports.getProductoById = getProductoById;

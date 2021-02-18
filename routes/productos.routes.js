@@ -3,17 +3,18 @@ const router = express.Router();
 const multer = require('multer');
 const upload = multer({dest: 'mysql://root:@localhost:3306/delilah'});
 const productosController = require('../controllers/productos.controllers');
+const middleware = require('../middleware')
 
-router.get('/', productosController.getProductos)
+router.get('/', middleware.autentificarUser, productosController.getProductos)
 
-//router.get('/productos/:id', productosController.)
+router.get('/:id', middleware.autentificarUser, productosController.getProductoById)
 
-router.post('/productos', productosController.nuevoProducto)
+router.post('/', productosController.nuevoProducto)
 
 
 //router.put('/:id', upload.single('nombre'), productosController.updateAlbum)
 
-router.delete('/producto/:id', productosController.deleteProducto)
+router.delete('/:id', productosController.deleteProducto)
 
 
 module.exports = router

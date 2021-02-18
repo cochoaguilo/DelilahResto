@@ -12,8 +12,7 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit:'50mb' }));
 
-
-//app.use(expressjwt({secret:clave}).unless({path: ['usuario/login']}));
+const autentificarAdmin = require('./middleware')
 app.use(cors());
 app.use(helmet());
 
@@ -28,7 +27,7 @@ const productosRoutes = require('./routes/productos.routes')
 
 app.use('/usuarios',usuariosRoutes);
 app.use('/pedidos', pedidosRoutes);
-app.use('/productos', productosRoutes);
+app.use('/productos',  productosRoutes);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
