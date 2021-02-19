@@ -5,7 +5,7 @@ const upload = multer({dest: 'mysql://root:@localhost:3306/delilah'});
 const usuariosController = require('../controllers/usuarios.controllers');
 const middleware = require('../middleware')
 
-router.get('/', usuariosController.getUsuarios)
+router.get('/',middleware.autentificarAdmin, usuariosController.getUsuarios)
 
 //router.get('/usuarios/:id', usuariosController.getAlbumById)
 
@@ -17,7 +17,7 @@ router.post('/login',usuariosController.loginUsuario)
 
 //router.put('/:id', upload.single('nombre'), usuariosController.updateAlbum)
 
-router.delete('/:id', usuariosController.deleteUsuario)
+router.delete('/:id',middleware.autentificarAdmin, usuariosController.deleteUsuario)
 
 
 module.exports = router

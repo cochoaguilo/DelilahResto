@@ -9,12 +9,12 @@ router.get('/', middleware.autentificarUser, productosController.getProductos)
 
 router.get('/:id', middleware.autentificarUser, productosController.getProductoById)
 
-router.post('/', productosController.nuevoProducto)
+router.post('/', middleware.autentificarAdmin , productosController.nuevoProducto)
 
 
 //router.put('/:id', upload.single('nombre'), productosController.updateAlbum)
 
-router.delete('/:id', productosController.deleteProducto)
+router.delete('/:id', middleware.autentificarAdmin, productosController.deleteProducto)
 
 
 module.exports = router

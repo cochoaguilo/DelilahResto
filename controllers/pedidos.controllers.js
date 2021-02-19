@@ -1,4 +1,5 @@
 const sequelize = require('../conexion');
+const jwt = require("jsonwebtoken");
 
 let getPedidos = async(req, res) => {
   const query = 'SELECT * FROM pedidos';

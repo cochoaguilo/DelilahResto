@@ -67,26 +67,29 @@ let deleteUsuario = async (req,res)=>{
   
 let loginUsuario = async(req, res) => {
     let clave = "marcos21";
-    let { correo, contrasena } = req.body;
-    console.log('estoy aqui')
+    const { correo } = req.body;
+    
     try{
       const query = `SELECT * FROM usuarios
-    where correo =? and 
-    contrasena = ? LIMIT 1`;
-      let result = await sequelize.query(query,{replacements:[correo, contrasena]
-      })
+    WHERE correo = ? LIMIT 1`;
+      let result = await sequelize.query(query,{replacements:[correo],
+        type:sequelize.QueryTypes.SELECT
+      });
       console.log(result);
-      console.log(result.length);
-      if (result !== 0) {
-        
+      if(result.length ==0){
+        res.send("usuario incorrecto");
+        //console.log(result);
+      }
+      if (result.length == 1) {
+        console.log(result)
         let token = jwt.sign({correo: result.correo, tipo: result.id_role}, clave);
         
         res.status(200).json({msj: 'usuario loggeado', token: token})
       } 
-    }
+      
+      }
     catch (e){
       console.log(e);
-      res.status(401).send("usuario incorrecto");
     }
   };
 
