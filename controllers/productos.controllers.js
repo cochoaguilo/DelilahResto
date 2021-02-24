@@ -56,7 +56,31 @@ let deleteProducto =  async(req, res)=>{
   
   };
 
+  const updateProducto = async (req, res) =>{
+    const { name, precio } = req.body
+
+    try {
+        const result = await sequelize.query(`UPDATE productos 
+        SET name = "${name}",  
+        precio = "${precio}" 
+        WHERE id_producto = ${req.params.id}`,
+        { type: sequelize.QueryTypes.INSERT })
+
+        console.log(result)
+        res.status(204).json({
+            message: 'producto actulizado'
+    })
+
+    } catch (error) {
+        res.status(401).json({
+          message: 'producto no encontrado'
+        })
+        console.log(`error en la inserción ${error}`)
+    }
+}
+
 exports.getProductos = getProductos;
 exports.nuevoProducto = nuevoProducto;
 exports.deleteProducto = deleteProducto;
 exports.getProductoById = getProductoById;
+exports.updateProducto = updateProducto;

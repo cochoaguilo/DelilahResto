@@ -7,16 +7,16 @@ const upload = multer({dest: 'mysql://root:@localhost:3306/delilah'})
 const pedidosController = require('../controllers/pedidos.controllers');
 const middleware = require('../middleware');
 
-router.get('/pedidos', middleware.autentificarAdmin, pedidosController.getPedidos);
+router.get('/', middleware.autentificarAdmin, pedidosController.getPedidos);
 
 //router.get('/pedidos/:id', pedidosController.)
 
-router.post('/pedidos', middleware.autentificarUser, pedidosController.nuevoPedido);
+router.post('/', middleware.autentificarUser, pedidosController.nuevoPedido);
 
 
-//router.put('/:id', pedidosController.)
+router.put('/:id', middleware.autentificarAdmin, pedidosController.updatePedido)
 
-router.delete('/pedidos/:id', middleware.autentificarAdmin, pedidosController.deletePedido);
+router.delete('/:id', middleware.autentificarAdmin, pedidosController.deletePedido);
 
 
 module.exports = router

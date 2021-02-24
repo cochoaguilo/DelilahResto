@@ -12,7 +12,7 @@ router.get('/:id', middleware.autentificarUser, productosController.getProductoB
 router.post('/', middleware.autentificarAdmin , productosController.nuevoProducto)
 
 
-//router.put('/:id', upload.single('nombre'), productosController.updateAlbum)
+router.put('/:id', middleware.autentificarAdmin, productosController.updateProducto)
 
 router.delete('/:id', middleware.autentificarAdmin, productosController.deleteProducto)
 
